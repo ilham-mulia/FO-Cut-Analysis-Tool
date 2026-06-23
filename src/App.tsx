@@ -11,7 +11,6 @@ import { cn } from './lib/utils';
 import { ConfigView } from './components/ConfigView';
 import { SIASheetView } from './components/SIASheetView';
 import { PinProtection } from './components/PinProtection';
-import { get, set } from 'idb-keyval';
 
 type Tab = 'FO_Cut_Input' | 'Config' | 'SIA_Master';
 
@@ -21,34 +20,53 @@ export default function App() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
 
+  // Get base path properly
+  const basePath = import.meta.env.BASE_PATH || '';
+
   useEffect(() => {
     async function initData() {
       try {
-        const storedConfig = await get('master_config');
-        const storedSIA = await get('master_sia');
-        if (storedConfig || storedSIA) {
+        const response = await fetch(`${basePath}/api/master-data`);
+        if (response.ok) {
+          const data = await response.json();
           setMasterData({
-            config: storedConfig || [],
-            siaEdges: storedSIA || []
+            config: data.config || [],
+            siaEdges: data.siaEdges || []
           });
         }
       } catch (err) {
-        console.error("Failed to load from IDB", err);
+        console.error("Failed to load from server", err);
       } finally {
         setIsLoaded(true);
       }
     }
     initData();
-  }, []);
+  }, [basePath]);
+
+  const saveToServer = async (data: MasterData) => {
+    try {
+      await fetch(`${basePath}/api/master-data`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+    } catch (err) {
+      console.error("Failed to save to server", err);
+    }
+  };
 
   const updateConfig = async (config: ConfigArea[]) => {
-    setMasterData(prev => ({ ...prev, config }));
-    await set('master_config', config).catch(console.error);
+    const newData = { ...masterData, config };
+    setMasterData(newData);
+    await saveToServer(newData);
   };
 
   const updateSIA = async (siaEdges: SIAEdge[]) => {
-    setMasterData(prev => ({ ...prev, siaEdges }));
-    await set('master_sia', siaEdges).catch(console.error);
+    const newData = { ...masterData, siaEdges };
+    setMasterData(newData);
+    await saveToServer(newData);
   };
 
   if (!isLoaded) {
