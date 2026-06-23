@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import path from "path";
 import fs from "fs/promises";
@@ -8,8 +9,8 @@ const DATA_FILE = path.join(process.cwd(), "master-data.json");
 
 async function startServer() {
   const app = express();
-  // Using 3000 per the container constraints
-  const PORT = 3000;
+  // Using PORT from .env or fallback to 3000
+  const PORT = process.env.PORT || 3000;
 
   app.use(cors());
   app.use(express.json({ limit: "50mb" }));
@@ -62,7 +63,7 @@ async function startServer() {
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}${basePath}`);
   });
 }
 

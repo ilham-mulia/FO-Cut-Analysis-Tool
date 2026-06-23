@@ -20,8 +20,8 @@ export default function App() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
 
-  // Get base path properly
-  const basePath = import.meta.env.BASE_PATH || '';
+  // Get base path properly from Vite's BASE_URL
+  const basePath = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL.replace(/\/$/, '');
 
   useEffect(() => {
     async function initData() {
