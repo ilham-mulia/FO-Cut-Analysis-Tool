@@ -10,6 +10,7 @@ import { Network, Loader2 } from 'lucide-react';
 import { cn } from './lib/utils';
 import { ConfigView } from './components/ConfigView';
 import { SIASheetView } from './components/SIASheetView';
+import { PinProtection } from './components/PinProtection';
 import { get, set } from 'idb-keyval';
 
 type Tab = 'FO_Cut_Input' | 'Config' | 'SIA_Master';
@@ -18,6 +19,7 @@ export default function App() {
   const [masterData, setMasterData] = useState<MasterData>({ config: [], siaEdges: [] });
   const [activeTab, setActiveTab] = useState<Tab>('FO_Cut_Input');
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(false);
 
   useEffect(() => {
     async function initData() {
@@ -58,6 +60,23 @@ export default function App() {
     );
   }
 
+  const renderActiveTab = () => {
+    if (activeTab !== 'FO_Cut_Input' && !isUnlocked) {
+      return <PinProtection onUnlock={() => setIsUnlocked(true)} />;
+    }
+
+    switch (activeTab) {
+      case 'FO_Cut_Input':
+        return <CalculatorTable masterData={masterData} />;
+      case 'Config':
+        return <ConfigView configData={masterData.config} onUpdate={updateConfig} />;
+      case 'SIA_Master':
+        return <SIASheetView siaEdges={masterData.siaEdges} onUpdate={updateSIA} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen w-full bg-slate-50 font-sans text-slate-800 antialiased overflow-hidden">
       <header className="flex items-center justify-between px-8 py-4 bg-white border-b border-slate-200 shrink-0">
@@ -65,7 +84,7 @@ export default function App() {
           <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center shadow-sm">
             <Network className="w-5 h-5 text-white" />
           </div>
-          <h1 className="text-lg font-bold tracking-tight text-slate-900">FO CUT ANALYSIS TOOL</h1>
+          <h1 className="text-lg font-bold tracking-tight text-slate-900">ALPACA</h1>
         </div>
         <div className="flex gap-1 bg-slate-100 p-1 rounded-lg">
           <button 
@@ -91,9 +110,7 @@ export default function App() {
       
       <main className="flex-1 overflow-auto p-4 sm:p-8 flex flex-col gap-6 items-center">
         <div className="flex-1 flex flex-col min-h-[500px] w-full max-w-6xl">
-          {activeTab === 'FO_Cut_Input' && <CalculatorTable masterData={masterData} />}
-          {activeTab === 'Config' && <ConfigView configData={masterData.config} onUpdate={updateConfig} />}
-          {activeTab === 'SIA_Master' && <SIASheetView siaEdges={masterData.siaEdges} onUpdate={updateSIA} />}
+          {renderActiveTab()}
         </div>
       </main>
 

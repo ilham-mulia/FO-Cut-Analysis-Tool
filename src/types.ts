@@ -11,6 +11,16 @@ export interface SIAEdge {
   dst_lat: number;
   dst_lng: number;
   length_sia: number;
+  merge_status?: string;
+  source_segment_count?: number;
+  source_segment_ids?: string;
+  source_segment_parts?: string;
+  virtual_connection_count?: number;
+  max_virtual_gap_m?: number;
+  length_rule_status?: string;
+  geometry_wkt?: string;
+  SIA_ORG?: string;
+  SIA_DST?: string;
   min_lat: number;
   max_lat: number;
   min_lng: number;

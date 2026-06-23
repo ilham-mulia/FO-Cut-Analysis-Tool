@@ -207,19 +207,25 @@ export function CalculatorTable({ masterData }: Props) {
               <span className="text-sm font-semibold text-slate-800">{result.Sub_Segment || '-'}</span>
             </div>
             
-            <div className="col-span-full h-px bg-slate-100 my-2" />
+            <div className="col-span-full h-px bg-slate-100 mt-2 mb-4" />
 
-            <div className="flex flex-col gap-1.5">
+            {/* Highlighting SIA ORG and DST */}
+            <div className="col-span-full grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex flex-col gap-2 p-4 bg-blue-50 border border-blue-100 rounded-xl relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-1 h-full bg-blue-500" />
+                <span className="text-xs font-black text-blue-800 uppercase tracking-widest">SIA Origin (ORG)</span>
+                <span className="text-sm font-mono font-bold text-slate-900 break-all" title={result.SIA_ORG}>{result.SIA_ORG || '-'}</span>
+              </div>
+              <div className="flex flex-col gap-2 p-4 bg-indigo-50 border border-indigo-100 rounded-xl relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-1 h-full bg-indigo-500" />
+                <span className="text-xs font-black text-indigo-800 uppercase tracking-widest">SIA Destination (DST)</span>
+                <span className="text-sm font-mono font-bold text-slate-900 break-all" title={result.SIA_DST}>{result.SIA_DST || '-'}</span>
+              </div>
+            </div>
+
+            <div className="col-span-full flex flex-col gap-1.5 mt-2">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">SIA Length</span>
               <span className="text-sm font-mono text-slate-700">{result.length_SIA ? `${result.length_SIA} m` : '-'}</span>
-            </div>
-            <div className="flex flex-col gap-1.5 col-span-1 md:col-span-1">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">SIA ORG</span>
-              <span className="text-xs font-mono text-slate-500 truncate" title={result.SIA_ORG}>{result.SIA_ORG || '-'}</span>
-            </div>
-            <div className="flex flex-col gap-1.5 col-span-2 sm:col-span-1 md:col-span-2">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">SIA DST</span>
-              <span className="text-xs font-mono text-slate-500 truncate" title={result.SIA_DST}>{result.SIA_DST || '-'}</span>
             </div>
           </div>
         </div>

@@ -59,6 +59,14 @@ export function MasterDataUpload({ mode, onDataLoaded }: Props) {
                  min_lng: Math.min(parseFloat(row.org_lng) || 0, parseFloat(row.dst_lng) || 0),
                  max_lng: Math.max(parseFloat(row.org_lng) || 0, parseFloat(row.dst_lng) || 0),
 
+                 merge_status: row.merge_status || '',
+                 source_segment_count: parseInt(row.source_segment_count) || 0,
+                 source_segment_ids: row.source_segment_ids || '',
+                 source_segment_parts: row.source_segment_parts || '',
+                 virtual_connection_count: parseInt(row.virtual_connection_count) || 0,
+                 max_virtual_gap_m: parseFloat(row.max_virtual_gap_m) || 0,
+                 length_rule_status: row.length_rule_status || '',
+                 geometry_wkt: row.geometry_wkt || '',
                  SIA_ORG: row.SIA_ORG || '',
                  SIA_DST: row.SIA_DST || ''
                };

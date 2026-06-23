@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ConfigArea } from '../types';
 import { FileCode2, Trash2 } from 'lucide-react';
 import { MasterDataUpload } from './MasterDataUpload';
@@ -9,9 +9,15 @@ interface Props {
 }
 
 export function ConfigView({ configData, onUpdate }: Props) {
+  const [confirmClear, setConfirmClear] = useState(false);
+
   const handleClearAll = () => {
-    if (confirm("Are you sure you want to clear all config data?")) {
+    if (confirmClear) {
       onUpdate([]);
+      setConfirmClear(false);
+    } else {
+      setConfirmClear(true);
+      setTimeout(() => setConfirmClear(false), 3000); // Reset after 3 seconds
     }
   };
 
@@ -41,7 +47,7 @@ export function ConfigView({ configData, onUpdate }: Props) {
               </div>
               <button onClick={handleClearAll} className="text-xs font-semibold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded transition-colors flex items-center gap-1">
                 <Trash2 className="w-3.5 h-3.5" />
-                Clear All
+                {confirmClear ? "Click again to confirm" : "Clear All"}
               </button>
             </div>
           </div>
